@@ -109,6 +109,13 @@ function cerrarCarrito() {
 
 // Inicialización
 document.addEventListener('DOMContentLoaded', function() {
+    // Ocultar modal de producto al cargar la página
+    var productModal = document.getElementById('productModal');
+    if (productModal) {
+        productModal.style.display = 'none';
+        var modalContent = document.getElementById('modalContent');
+        if (modalContent) modalContent.innerHTML = '';
+    }
     initApp();
     actualizarCarritoUI();
     document.getElementById('cartBtn').addEventListener('click', mostrarCarrito);
@@ -167,7 +174,28 @@ function setupEventListeners() {
             filtrarPorCategoria(categoria);
         });
     });
-    
+
+    // Restablecer todo al hacer clic en Inicio o Productos
+    document.querySelectorAll('.nav-link').forEach(link => {
+        if (link.getAttribute('href') === '#inicio' || link.getAttribute('href') === '#productos') {
+            link.addEventListener('click', function() {
+                // Limpiar buscador
+                searchInput.value = '';
+                busquedaActual = '';
+                // Restablecer categoría
+                categoriaActual = 'todos';
+                filterBtns.forEach(btn => {
+                    if (btn.dataset.category === 'todos') {
+                        btn.classList.add('active');
+                    } else {
+                        btn.classList.remove('active');
+                    }
+                });
+                aplicarFiltros();
+            });
+        }
+    });
+
     // Categorías clickeables
     categoryCards.forEach(card => {
         card.addEventListener('click', function() {
@@ -220,25 +248,54 @@ async function cargarProductos() {
 
 // Renderizar productos agrupados por categoría
 function renderizarProductos() {
+    // Mostrar u ocultar el header de productos según si hay búsqueda
+    const productsHeader = document.querySelector('.products-header');
+    const buscadorTextoAmigable = document.querySelector('.buscador-texto-amigable');
+    let resultadoBusquedaElem = document.getElementById('resultadoBusqueda');
+    if (!resultadoBusquedaElem) {
+        resultadoBusquedaElem = document.createElement('div');
+        resultadoBusquedaElem.id = 'resultadoBusqueda';
+        resultadoBusquedaElem.className = 'category-group-title';
+        buscadorTextoAmigable && buscadorTextoAmigable.insertAdjacentElement('afterend', resultadoBusquedaElem);
+    }
+    if (productsHeader) {
+        if (busquedaActual && busquedaActual.length > 0) {
+            productsHeader.style.display = 'none';
+            resultadoBusquedaElem.style.display = 'block';
+            resultadoBusquedaElem.textContent = busquedaActual.toUpperCase();
+        } else {
+            productsHeader.style.display = '';
+            resultadoBusquedaElem.style.display = 'none';
+        }
+    }
     if (productosFiltrados.length === 0) {
         mostrarNoProductos();
         return;
     }
-
-    // Agrupar productos por categoría
-    const categorias = ['Mates', 'Yerbas', 'Termos', 'Bombillas'];
     let html = '';
-    categorias.forEach(cat => {
-        const productosCat = productosFiltrados.filter(p => p.categoria === cat);
-        if (productosCat.length > 0) {
-            html += `<div class="category-group-block">
-                        <h2 class="category-group-title">${cat}</h2>
-                        <div class="products-grid">${productosCat.map(producto => crearProductoHTML(producto)).join('')}</div>
-                    </div>`;
-        }
-    });
+    if (busquedaActual && busquedaActual.length > 0) {
+        // Si hay búsqueda, mostrar todos los productos filtrados en un solo bloque
+        html += `<div class="products-grid">${productosFiltrados.map(producto => crearProductoHTML(producto)).join('')}</div>`;
+    } else if (categoriaActual !== 'todos') {
+        // Mostrar solo la categoría seleccionada
+        html += `<div class="category-group-block">
+                    <h2 class="category-group-title">${categoriaActual}</h2>
+                    <div class="products-grid">${productosFiltrados.map(producto => crearProductoHTML(producto)).join('')}</div>
+                </div>`;
+    } else {
+        // Agrupar productos por categoría
+        const categorias = ['Mates', 'Termos', 'Yerbas', 'Bombillas', 'Otros'];
+        categorias.forEach(cat => {
+            const productosCat = productosFiltrados.filter(p => p.categoria === cat);
+            if (productosCat.length > 0) {
+                html += `<div class="category-group-block">
+                            <h2 class="category-group-title">${cat}</h2>
+                            <div class="products-grid">${productosCat.map(producto => crearProductoHTML(producto)).join('')}</div>
+                        </div>`;
+            }
+        });
+    }
     productsGrid.innerHTML = html;
-
     // Agregar event listeners a las tarjetas de productos
     const productCards = document.querySelectorAll('.product-card');
     productCards.forEach(card => {
@@ -247,7 +304,6 @@ function renderizarProductos() {
             abrirModalProducto(productId);
         });
     });
-
     noProducts.style.display = 'none';
 }
 
@@ -277,7 +333,23 @@ function crearProductoHTML(producto) {
 // Buscar productos
 function realizarBusqueda() {
     busquedaActual = searchInput.value.trim();
+    categoriaActual = 'todos';
+    // Quitar la clase 'active' de todos los botones y dejar solo 'Todos' activa
+    filterBtns.forEach(btn => {
+        if (btn.dataset.category === 'todos') {
+            btn.classList.add('active');
+        } else {
+            btn.classList.remove('active');
+        }
+    });
     aplicarFiltros();
+    // Scroll automático para mostrar resultados debajo del buscador
+    const buscador = document.querySelector('.search-bar-universal');
+    const productosSection = document.getElementById('productos');
+    if (window.innerWidth <= 900 && buscador && productosSection) {
+        const offset = buscador.offsetHeight + buscador.getBoundingClientRect().top + window.scrollY + 8;
+        window.scrollTo({ top: offset, behavior: 'smooth' });
+    }
 }
 
 // Filtrar por categoría
@@ -299,13 +371,15 @@ function filtrarPorCategoria(categoria) {
 function aplicarFiltros() {
     productosFiltrados = productos.filter(producto => {
         const coincideCategoria = categoriaActual === 'todos' || producto.categoria === categoriaActual;
-        const coincideBusqueda = !busquedaActual || 
-            producto.nombre.toLowerCase().includes(busquedaActual.toLowerCase()) ||
-            producto.descripcion?.toLowerCase().includes(busquedaActual.toLowerCase());
-        
+        let coincideBusqueda = true;
+        if (busquedaActual) {
+            const nombreCoincide = producto.nombre.toLowerCase().includes(busquedaActual.toLowerCase());
+            const descripcionCoincide = producto.descripcion && producto.descripcion.toLowerCase().includes(busquedaActual.toLowerCase());
+            const categoriaCoincide = producto.categoria.toLowerCase().includes(busquedaActual.toLowerCase());
+            coincideBusqueda = nombreCoincide || descripcionCoincide || categoriaCoincide;
+        }
         return coincideCategoria && coincideBusqueda;
     });
-    
     renderizarProductos();
 }
 
@@ -459,8 +533,13 @@ function setupSmoothScrolling() {
             const targetSection = document.querySelector(targetId);
             
             if (targetSection) {
-                targetSection.scrollIntoView({ behavior: 'smooth' });
-                
+                const headerOffset = 110; // altura del header fijo
+                const elementPosition = targetSection.getBoundingClientRect().top + window.pageYOffset;
+                const offsetPosition = elementPosition - headerOffset;
+                window.scrollTo({
+                    top: offsetPosition,
+                    behavior: 'smooth'
+                });
                 // Cerrar menú móvil si está abierto
                 if (nav.classList.contains('active')) {
                     nav.classList.remove('active');

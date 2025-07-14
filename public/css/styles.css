@@ -274,7 +274,9 @@ body {
 
 /* Productos */
 .products {
-    padding: 5rem 0;
+    padding-top: 0 !important;
+    padding-bottom: 5rem;
+    margin-top: 0 !important;
 }
 
 .products-header {
@@ -853,22 +855,78 @@ body {
   margin-top: 0.7rem;
 }
 
+/* Eliminar cualquier espacio entre buscador y título */
 .search-bar-universal {
-  margin-top: 120px;
-  margin-bottom: 1.2rem;
+  margin-top: 140px;
+  margin-bottom: 0 !important;
   width: 100%;
   z-index: 10;
 }
-
-/* Reduce espacio debajo del buscador */
 .search-container {
-  margin-bottom: 0.5rem !important;
+  margin-bottom: 0 !important;
+  box-shadow: none !important;
+}
+.section-title {
+  margin-top: 50px !important;
+  margin-bottom: 0.7rem !important;
+  padding-top: 0 !important;
 }
 
-/* Reduce espacio arriba y abajo del título de sección */
+.products-header {
+  margin-top: 0 !important;
+  margin-bottom: 0 !important;
+  padding-top: 0 !important;
+}
 .section-title {
-  margin-top: 1.2rem !important;
-  margin-bottom: 1.5rem !important;
+  margin-top: 0 !important;
+  padding-top: 0 !important;
+}
+
+.divider-buscador {
+  border: none;
+  height: 4px;
+  width: 60px;
+  background: linear-gradient(90deg, #b6ff7a 0%, #8bc34a 100%);
+  border-radius: 2px;
+  margin: 0 auto 0 auto;
+  display: block;
+  opacity: 0.85;
+}
+
+.buscador-texto-amigable {
+  text-align: center;
+  color: #b6ff7a;
+  font-size: 1rem;
+  font-family: 'Poppins', 'Nunito', 'Montserrat', 'Quicksand', 'Inter', sans-serif;
+  font-weight: 700;
+  margin: 0 0 0 0;
+  letter-spacing: 0.2px;
+  text-shadow: 0 1px 4px #155c2e22;
+}
+
+@media (max-width: 900px) {
+  .search-bar-universal {
+    margin-top: 140px !important;
+    margin-bottom: 0 !important;
+    background: transparent !important;
+    border-radius: 0 !important;
+  }
+  .products-header {
+    margin-top: 0 !important;
+    margin-bottom: 0 !important;
+  }
+}
+@media (max-width: 600px) {
+  .search-bar-universal {
+    margin-top: 140px !important;
+    margin-bottom: 0 !important;
+    background: transparent !important;
+    border-radius: 0 !important;
+  }
+  .products-header {
+    margin-top: 0 !important;
+    margin-bottom: 0 !important;
+  }
 }
 
 @media (max-width: 900px) {
@@ -909,6 +967,13 @@ body {
     .logo {
       order: 1;
       margin-left: 0.2rem;
+    }
+    .search-bar-universal {
+      margin-top: 100px;
+      margin-bottom: 8px !important;
+    }
+    .search-container {
+      margin-bottom: 0 !important;
     }
 }
 

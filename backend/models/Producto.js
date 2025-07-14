@@ -10,7 +10,7 @@ const productoSchema = new mongoose.Schema({
     categoria: {
         type: String,
         required: [true, 'La categoría es obligatoria'],
-        enum: ['Mates', 'Termos', 'Bombillas', 'Yerbas'],
+        enum: ['Mates', 'Termos', 'Bombillas', 'Yerbas', 'Otros'],
         default: 'Mates'
     },
     precio: {

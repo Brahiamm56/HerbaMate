@@ -91,6 +91,20 @@ function setupEventListeners() {
     
     // Preview de imagen
     document.getElementById('imagen').addEventListener('change', handleImagePreview);
+
+    // Busca el select de categoría y agrega la opción 'Otros' si no existe
+    const categoriaSelect = document.getElementById('categoria');
+    if (categoriaSelect && !Array.from(categoriaSelect.options).some(opt => opt.value === 'Otros')) {
+        const option = document.createElement('option');
+        option.value = 'Otros';
+        option.textContent = 'Otros';
+        // Insertar después de 'Seleccionar categoría'
+        if (categoriaSelect.options.length > 0) {
+            categoriaSelect.insertBefore(option, categoriaSelect.options[1]);
+        } else {
+            categoriaSelect.appendChild(option);
+        }
+    }
 }
 
 // Cargar productos

@@ -10,14 +10,25 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+@keyframes loaderSpin {
+  0% { transform: scale(1) rotate(-8deg); }
+  100% { transform: scale(1.08) rotate(8deg); }
+}
+</style>
 </head>
 <body>
+    <!-- Loader de pantalla completa -->
+    <div id="herbamateLoader" style="position:fixed;z-index:99999;top:0;left:0;width:100vw;height:100vh;background:rgba(21,92,46,0.55);backdrop-filter:blur(7px);display:flex;align-items:center;justify-content:center;flex-direction:column;transition:opacity 0.5s;">
+        <img src="images/logo.png" alt="HerbaMate Logo" style="width:90px;height:90px;object-fit:contain;margin-bottom:1.2rem;filter:drop-shadow(0 2px 12px #b6ff7a88);animation: loaderSpin 1.2s linear infinite alternate;">
+        <span style="color:#fff;font-size:2rem;font-weight:900;letter-spacing:1.5px;font-family:'Inter',sans-serif;">HerbaMate</span>
+    </div>
     <!-- Header -->
     <header class="header">
         <div class="container">
             <div class="header-content">
                 <div class="logo">
-                    <a href="https://wa.me/5493624562611?text=Hola!%20Quiero%20consultar%20por%20productos%20de%20HerbaMate" target="_blank" rel="noopener">
+                    <a href="#inicio">
                         <img src="images/logo.png" alt="HerbaMate Logo" class="logo-img">
                     </a>
                     <div style="display: flex; flex-direction: column; align-items: flex-start;">
@@ -53,17 +64,20 @@
         </div>
     </header>
 
+    <!-- Ancla invisible para #inicio -->
+    <div id="inicio" style="position:relative; top:-110px; height:1px; width:1px;"></div>
+
     <!-- Buscador universal debajo del header y ubicación -->
     <div class="search-bar-universal">
-        <div class="container">
-            <div class="search-container">
-                <input type="text" id="searchInput" placeholder="Buscar productos..." class="search-input">
-                <button id="searchBtn" class="search-btn">
-                    <i class="fas fa-search"></i>
-                </button>
-            </div>
+        <div class="search-container">
+            <input type="text" id="searchInput" placeholder="Buscar productos..." class="search-input">
+            <button id="searchBtn" class="search-btn">
+                <i class="fas fa-search"></i>
+            </button>
         </div>
     </div>
+    <div class="buscador-texto-amigable">¿Qué buscás hoy?</div>
+    <hr class="divider-buscador">
 
     <!-- Productos -->
     <section class="products" id="productos">
@@ -71,16 +85,16 @@
             <div class="products-header">
                 <h2 class="section-title">Nuestros Productos</h2>
                 <div style="display: flex; justify-content: center; margin: 1.5rem 0 1.5rem 0;">
-                    <a href="#productos" class="btn btn-primary" style="font-size: 1.25rem; padding: 1.1em 2.6em; border-radius: 2em;">Ver productos</a>
+                    <a href="#productos" class="btn btn-primary" style="font-size: 1.25rem; padding: 1.1em 2.6em; border-radius: 2em;">Ver todos los productos</a>
                 </div>
                 <!-- El buscador y filtros ya no van aquí -->
-                <div class="category-filters" style="display: flex; justify-content: center; align-items: center; margin-bottom: 2rem;">
+                <div class="category-filters" id="categorias" style="display: flex; justify-content: center; align-items: center; margin-bottom: 2rem;">
   <div style="display: grid; grid-template-columns: 1fr 1fr; grid-template-rows: auto auto auto; gap: 0.5rem 2.5rem; align-items: center; justify-items: center;">
-    <button class="filter-btn active" data-category="todos" style="grid-column: 1 / span 2; width: 120px;">Todos</button>
-    <button class="filter-btn" data-category="Mates" style="width: 120px;">Mates</button>
-    <button class="filter-btn" data-category="Termos" style="width: 120px;">Termos</button>
-    <button class="filter-btn" data-category="Yerbas" style="width: 120px;">Yerbas</button>
-    <button class="filter-btn" data-category="Bombillas" style="width: 120px;">Bombillas</button>
+    <button class="filter-btn" data-category="Otros" style="width: 120px; grid-column: 1 / span 2;">Otros</button>
+    <button class="filter-btn" data-category="Mates" style="width: 120px; grid-column: 1;">Mates</button>
+    <button class="filter-btn" data-category="Yerbas" style="width: 120px; grid-column: 2;">Yerbas</button>
+    <button class="filter-btn" data-category="Termos" style="width: 120px; grid-column: 1;">Termos</button>
+    <button class="filter-btn" data-category="Bombillas" style="width: 120px; grid-column: 2;">Bombillas</button>
   </div>
 </div>
             </div>
@@ -115,8 +129,8 @@
                 </div>
                 <div class="footer-section">
                     <h4>Contacto</h4>
-                    <p><i class="fas fa-phone"></i> +54 11 1234-5678</p>
-                    <p><i class="fas fa-envelope"></i> info@herbamate.com</p>
+                    <p><i class="fas fa-phone"></i> +54 9 362 456-2611</p>
+                    <p><i class="fas fa-envelope"></i> herbamate@gmail.com</p>
                 </div>
                 <div class="footer-section">
                     <h4>Ubicación</h4>
@@ -165,5 +179,13 @@
     </div>
 
     <script src="js/main.js"></script>
+    <script>
+window.addEventListener('DOMContentLoaded', function() {
+  setTimeout(function() {
+    var loader = document.getElementById('herbamateLoader');
+    if(loader) { loader.style.opacity = 0; setTimeout(function(){ loader.remove(); }, 500); }
+  }, 900);
+});
+</script>
 </body>
 </html> 
