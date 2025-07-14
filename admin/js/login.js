@@ -15,7 +15,8 @@ document.addEventListener('DOMContentLoaded', function() {
 // Verificar si ya hay una sesión activa
 async function verificarSesion() {
     try {
-        const response = await fetch('/api/auth/status');
+        const API_BASE = 'https://herbamate-1.onrender.com';
+        const response = await fetch(`${API_BASE}/api/auth/status`);
         const data = await response.json();
         
         if (data.authenticated) {
@@ -49,8 +50,9 @@ async function handleLogin(e) {
         submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Iniciando sesión...';
         submitBtn.disabled = true;
         
+        const API_BASE = 'https://herbamate-1.onrender.com';
         // Realizar petición de login
-        const response = await fetch('/api/auth/login', {
+        const response = await fetch(`${API_BASE}/api/auth/login`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'

@@ -45,7 +45,8 @@ function initDashboard() {
 // Verificar autenticación
 async function verificarAutenticacion() {
     try {
-        const response = await fetch('/api/auth/status');
+        const API_BASE = 'https://herbamate-1.onrender.com';
+        const response = await fetch(`${API_BASE}/api/auth/status`);
         const data = await response.json();
         
         if (!data.authenticated) {
@@ -112,7 +113,8 @@ async function cargarProductos() {
     try {
         mostrarLoading(true);
         
-        const response = await fetch('/api/productos');
+        const API_BASE = 'https://herbamate-1.onrender.com';
+        const response = await fetch(`${API_BASE}/api/productos`);
         const data = await response.json();
         
         if (data.success) {
@@ -252,7 +254,8 @@ function abrirModalNuevoProducto() {
 // Editar producto
 async function editarProducto(productId) {
     try {
-        const response = await fetch(`/api/productos/${productId}`);
+        const API_BASE = 'https://herbamate-1.onrender.com';
+        const response = await fetch(`${API_BASE}/api/productos/${productId}`);
         const data = await response.json();
         
         if (data.success) {
@@ -300,7 +303,8 @@ async function handleProductSubmit(e) {
         submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Guardando...';
         submitBtn.disabled = true;
         
-        const url = isEditing ? `/api/productos/${productoEditando._id}` : '/api/productos';
+        const API_BASE = 'https://herbamate-1.onrender.com';
+        const url = isEditing ? `${API_BASE}/api/productos/${productoEditando._id}` : `${API_BASE}/api/productos`;
         const method = isEditing ? 'PUT' : 'POST';
         
         const response = await fetch(url, {
@@ -330,7 +334,8 @@ async function handleProductSubmit(e) {
 // Toggle estado del producto
 async function toggleProducto(productId) {
     try {
-        const response = await fetch(`/api/productos/${productId}/toggle`, {
+        const API_BASE = 'https://herbamate-1.onrender.com';
+        const response = await fetch(`${API_BASE}/api/productos/${productId}/toggle`, {
             method: 'PATCH'
         });
         
@@ -362,7 +367,8 @@ function eliminarProducto(productId) {
 // Confirmar eliminación
 async function confirmarEliminacion(productId) {
     try {
-        const response = await fetch(`/api/productos/${productId}`, {
+        const API_BASE = 'https://herbamate-1.onrender.com';
+        const response = await fetch(`${API_BASE}/api/productos/${productId}`, {
             method: 'DELETE'
         });
         
@@ -423,7 +429,8 @@ function cerrarConfirmModal() {
 // Logout
 async function handleLogout() {
     try {
-        const response = await fetch('/api/auth/logout', {
+        const API_BASE = 'https://herbamate-1.onrender.com';
+        const response = await fetch(`${API_BASE}/api/auth/logout`, {
             method: 'POST'
         });
         
