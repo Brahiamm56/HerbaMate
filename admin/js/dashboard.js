@@ -32,80 +32,11 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 function initDashboard() {
-    // Verificar autenticación
-    verificarAutenticacion();
-    
     // Cargar productos
     cargarProductos();
     
     // Setup event listeners
     setupEventListeners();
-}
-
-// Verificar autenticación
-async function verificarAutenticacion() {
-    try {
-        const API_BASE = 'https://herbamate-1.onrender.com';
-        const response = await fetch(`${API_BASE}/api/auth/status`);
-        const data = await response.json();
-        
-        if (!data.authenticated) {
-            window.location.href = '/admin';
-        }
-    } catch (error) {
-        console.error('Error verificando autenticación:', error);
-        window.location.href = '/admin';
-    }
-}
-
-function setupEventListeners() {
-    // Botones principales
-    addProductBtn.addEventListener('click', abrirModalNuevoProducto);
-    logoutBtn.addEventListener('click', handleLogout);
-    
-    // Buscador
-    searchBtn.addEventListener('click', realizarBusqueda);
-    searchInput.addEventListener('keypress', function(e) {
-        if (e.key === 'Enter') {
-            realizarBusqueda();
-        }
-    });
-    
-    // Filtros
-    filterBtns.forEach(btn => {
-        btn.addEventListener('click', function() {
-            const filtro = this.dataset.filter;
-            aplicarFiltro(filtro);
-        });
-    });
-    
-    // Modal
-    closeModal.addEventListener('click', cerrarModal);
-    window.addEventListener('click', function(e) {
-        if (e.target === productModal) {
-            cerrarModal();
-        }
-    });
-    
-    // Formulario
-    productForm.addEventListener('submit', handleProductSubmit);
-    
-    // Preview de imagen
-    document.getElementById('imagen').addEventListener('change', handleImagePreview);
-
-    // Busca el select de categoría y agrega la opción 'Otros' si no existe
-    const categoriaSelect = document.getElementById('categoria');
-    if (categoriaSelect && !Array.from(categoriaSelect.options).some(opt => opt.value === 'Otros')) {
-        const option = document.createElement('option');
-        option.value = 'Otros';
-        option.textContent = 'Otros';
-        // Insertar después de 'Seleccionar categoría'
-        if (categoriaSelect.options.length > 0) {
-            categoriaSelect.insertBefore(option, categoriaSelect.options[1]);
-        } else {
-            categoriaSelect.appendChild(option);
-        }
-    }
 }
 
 // Cargar productos
